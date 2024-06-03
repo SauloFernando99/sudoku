@@ -1,0 +1,38 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-container h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .register-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-container input {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+  }
+  
+  .register-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .register-container button:hover {
+    background-color: #0056b3;
+  }
+  
