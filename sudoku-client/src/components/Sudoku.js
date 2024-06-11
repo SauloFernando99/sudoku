@@ -63,6 +63,7 @@ function Sudoku() {
   const [timeLeft, setTimeLeft] = useState(300);
   const [gameStarted, setGameStarted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     const { boardWithHoles, completedBoard } = generateSudoku();
@@ -102,16 +103,17 @@ function Sudoku() {
   }, []);  
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => {
+    if (gameStarted && timeLeft > 0) {
+      const timerId = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
-      return () => clearTimeout(timer);
-    } else {
+      setTimer(timerId);
+      return () => clearTimeout(timerId);
+    } else if (timeLeft === 0) {
       alert('Time is up! Game over.');
       window.location.reload();
     }
-  }, [timeLeft]);
+  }, [timeLeft, gameStarted]);
 
   const handleChange = (row, col, value) => {
     if (fixedCells[row][col]) return;
@@ -141,10 +143,18 @@ function Sudoku() {
       return rows.every(checkGroup) && cols.every(checkGroup) && grids.every(checkGroup);
     };
 
-    if (isValid(board)) {
-      setMessage('Sudoku board is valid!');
+    const isComplete = board.every(row => row.every(cell => cell !== ''));
+
+    if (isComplete) {
+      if (isValid(board)) {
+        clearTimeout(timer);
+        alert(`Congratulations! You won the game in ${formatTime(300 - timeLeft)}.`);
+        window.location.reload();
+      } else {
+        setMessage('Sudoku board is invalid.');
+      }
     } else {
-      setMessage('Sudoku board is invalid.');
+      setMessage('Please fill in all cells before checking.');
     }
   };
 
@@ -163,7 +173,7 @@ function Sudoku() {
     <div className='sudoku-container'>
 
       <h1>Sudoku Game</h1>
-      <p>{message}!</p>
+      <p>{message}</p>
       {isLoggedIn && !gameStarted && <button onClick={startGame}>Start Game</button>}
       {isLoggedIn && (
         <>
